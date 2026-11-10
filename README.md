@@ -1,58 +1,35 @@
 # PKHosting VPS Pricing Page
 
-A lightweight, zero-dependency responsive pricing page built for PKHosting's VPS cloud lineup as part of the TechAbout web developer technical assessment.
+Static pricing page built for the PKHosting / TechAbout front-end technical assessment. Everything runs from plain HTML, CSS, and vanilla JavaScript with zero external dependencies, no web fonts, and no build step. Total weight across `index.html`, `style.css`, and `script.js` sits around 65 KB.
 
-Everything runs self-contained from plain HTML, CSS, and vanilla JS with zero external web requests (no Google Fonts, no CDN scripts, no hotlinked assets). The total asset weight is under 50 KB, well within the 300 KB limit.
+## Running it locally
 
----
+Since everything is offline-ready, you can either double-click `index.html` directly in your browser or serve the folder over a quick local server:
 
-## How to Run It Locally
+```bash
+python -m http.server 8000
+```
 
-You don't need any build steps, bundlers, or npm installations. Just clone the repo and open it:
+Or with Node:
 
-1. **Directly in browser:**
-   Double-click `index.html` or open `file:///path/to/test/index.html` in Chrome, Firefox, Edge, or Safari.
+```bash
+npx serve .
+```
 
-2. **Via local dev server (optional):**
-   ```bash
-   # Python
-   python -m http.server 8000
+## Pricing, currencies, and accessibility details
 
-   # or Node / npx
-   npx serve .
-   ```
+Monthly PKR base prices (`Rs 2,400`, `Rs 4,800`, `Rs 9,600`, `Rs 19,500`) and the full 10-row comparison table are written straight into the HTML. Toggling to annual billing evaluates `(Monthly Price * 10) / 12` (so Growth drops from `Rs 4,800/mo` to `Rs 4,000/mo`), updates the annual billed total and savings badge, and mirrors the active monthly rate in the table footer. Currency conversion uses `1 USD = 278.50 PKR` and `1 GBP = 355.00 PKR`, keeping PKR in whole numbers and USD/GBP to two decimal places. Both selections persist in `localStorage`.
 
----
+On the accessibility side, the billing and currency controls use semantic radio groups with arrow-key and Tab support, visible `:focus-visible` outlines, an `aria-live="polite"` region that announces updated Growth pricing when you switch options, native `<details>`/`<summary>` FAQ items, and text contrast kept above 4.5:1 across both light sections and the dark footer.
 
-## How It Works
+## Browsers and viewports checked
 
-- **Base Prices in HTML:** The Starter (Rs 2,400), Growth (Rs 4,800), Scale (Rs 9,600), and Dedicated Core (Rs 19,500) monthly PKR rates and the full 10-row specification table live directly in raw HTML. If JavaScript is turned off, the page still renders properly with zero layout shift or missing numbers.
-- **Annual Billing Formula:** Evaluated strictly as `(Monthly Price * 10) / 12`. When toggled, Growth displays `Rs 4,000/mo` alongside the annual billed total and dynamically calculated savings badge.
-- **Currency Conversion:** Hardcoded rates for USD (`278.50 PKR`) and GBP (`355.00 PKR`). PKR values round cleanly to whole numbers, while USD and GBP format with two decimal places.
-- **State Retention:** Selections for both currency and billing cycle are saved in `localStorage`, so your view persists when reloading or returning later.
-- **Accessibility:** Uses native HTML semantic elements (`<details>` / `<summary>` for FAQs, `<table tabindex="0">` with horizontal container scroll), visible `:focus-visible` outlines for keyboard users, and an `aria-live="polite"` region that announces price changes to screen readers.
+Tested locally in Google Chrome and Mozilla Firefox across `360px`, `768px`, and `1440px` viewports (plus `320px` as an extra narrow sanity check). The 4-column card row drops to 2x2 around tablet widths and stacks cleanly to 1 column on mobile, while the spec table scrolls inside its own wrapper with no page-level horizontal scroll.
 
----
+## What I would add next
 
-## Browsers Tested
+If this were moving into production for PKHosting, the natural next steps would be wiring the plan buttons directly into WHMCS cart URLs with the selected plan, billing cycle, and currency prefilled, adding a datacenter selector (Karachi vs Islamabad IXP), and letting buyers toggle add-ons like extra IPv4 addresses or automated snapshot storage.
 
-- **Google Chrome (v142+ / Windows 11):** Tested keyboard tabbing, localStorage retention across reloads, 200% zoom behavior, and responsive resizing down to 360px viewport.
-- **Mozilla Firefox:** Verified that system fonts render cleanly without layout jitter, details/summary animation handles properly, and `:focus-visible` outlines render sharp.
-- **Responsive Widths:** Validated at 360px (mobile), 768px (tablet 2-column grid), and 1440px (desktop 4-column layout) with zero body-level horizontal scrolling.
+## AI usage disclosure
 
----
-
-## What Could Be Improved Next
-
-Given the 5-6 hour assessment timebox, I focused on bulletproof core logic, rock-solid accessibility, and responsive typography. If this was heading to production, here is what I would add next:
-
-- **Configurable Slider Add-ons:** Sliders for extra NVMe disk storage, extra IPv4 addresses, and backup retention periods with real-time price recalculation.
-- **Datacenter Region Selector:** A radio toggle allowing users to choose between Karachi (PKIX), Islamabad, Frankfurt, and Singapore datacenter routing.
-- **Direct WHMCS / Checkout Handoff:** Pass the selected plan ID, currency, and billing term directly as URL parameters or a session payload to PKHosting's WHMCS billing system (`cart.php?a=add&pid=X&billingcycle=annually&currency=PKR`).
-- **Smooth FAQ Transition Height:** While `<details>` works out of the box with zero JS, adding the modern CSS `interpolate-size: allow-keywords` or a brief grid height transition would make the accordion expansion feel even smoother.
-
----
-
-## AI Disclosure
-
-As requested in the assessment brief: I utilized an AI coding assistant (Google Antigravity / Gemini) during the development process to help scaffold initial boilerplates, double-check WCAG color contrast math, and quickly generate headless screenshot/Lighthouse execution scripts. All core formulas, responsive design structure, trade-off analysis, and code reviews were hands-on and verified directly.
+As noted in the assessment instructions, I used an AI coding assistant during development to help speed up initial markup scaffolding, double-check WCAG contrast ratios, and run automated headless Chrome layout/DOM checks across viewports. I handled the pricing math verification, visual layout direction, copy edits, and final cross-browser checks myself.
